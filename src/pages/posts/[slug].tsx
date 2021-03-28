@@ -15,6 +15,10 @@ interface PostProps {
   }
 }
 
+interface Session {
+  activeSubscription: object;
+}
+
 export default function Post({ post }: PostProps) {
   return (
     <>
@@ -39,8 +43,14 @@ export const getServerSideProps: GetServerSideProps = async ({ req, params }) =>
   const session = await getSession({ req });
   const { slug } = params;
 
-  // if (!session) {
-  // }
+  if (!session?.activeSubscription) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false
+      }
+    }
+  }
 
   const prismic = getPrismicClient(req);
 
@@ -50,7 +60,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, params }) =>
     slug,
     title: RichText.asText(response.data.title),
     content: RichText.asHtml(response.data.content),
-    updatedAt : new Date(response.last_publication_date).toLocaleDateString('pt-BR', {
+    updatedAt : new Date(response.last_publication_date).toLocaleDateString('en-US', {
       day: '2-digit',
       month: 'long',
       year: 'numeric'
