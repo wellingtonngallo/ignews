@@ -25,6 +25,9 @@ describe('Header component', () => {
       <Header />
     )
   
+    // Mostra elementos em tela que foram montados pelo teste e identifica o que pode ser utilizado para realizar o teste
+    screen.logTestingPlaygroundURL();
+
     expect(screen.getByText('Home')).toBeInTheDocument();
     expect(screen.getByText('Posts')).toBeInTheDocument();
   })
